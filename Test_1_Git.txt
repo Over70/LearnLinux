@@ -1,4 +1,12 @@
 This is a unicode-8 file.
 This file is without BOM.
 This is a test file for git.
-This version is one.
+
+
+Now Add some things in this file.
+
+This is second edit this file.
+
+This edit will delete "This version is one."
+And add "This version is two".
+This version is two.
