@@ -1,0 +1,48 @@
+在Windows上安装Git
+安装完成后,	在开始菜单里找到“Git”->“Git Bash”，蹦出一个类似命令行窗口的东西，就说明Git安装成功！
+初始设置:
+	$ git config --global user.name "Your Name"
+	$ git config --global user.email "email@example.com"
+
+	因为Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。
+	注意git config命令的--global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，
+	当然也可以对某个仓库指定不同的用户名和Email地址。
+
+版本库
+	什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件
+都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。
+  创建一个版本库非常简单，创建一个空目录，进入，然后执行一个git init命令可以把目录变成可以管理的仓库。
+ 如果你使用Windows系统，为了避免遇到各种莫名其妙的问题，请确保目录名（包括父目录）不包含中文。
+	在命令行执行 git init 命令把这个目录变成Git可以管理的仓库：
+
+	瞬间Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的话可以发现当前目录下多了一个.git的目录，
+这个目录是Git来跟踪管理版本库的，没事千万不要手动修改这个目录里面的文件，不然改乱了，就把Git仓库给破坏了。.git目录默认是隐藏的.
+
+添加文件到Git库
+	把一个文件放到Git仓库只需要两步。
+	第一步：用命令git add告诉Git，把文件添加到仓库.
+	    git add readme.txt   // 把readme.txt 添加到git库中。
+	第二步，用命令git commit告诉Git，把文件提交到仓库：
+	 		git commit -m "wrote a readme file"   //-m后面输入的是本次提交的说明.
+
+   为什么Git添加文件需要add，commit一共两步呢？
+   答：因为commit可以一次提交很多文件，所以你可以多次add不同的文件。
+       可以这样add 文件。
+        git add file1.txt
+				git add file2.txt file3.txt  //同时添加两个文件到库中。
+				git commit -m "add 3 files."
+
+修改已经提交的文件然后继续提交
+	成功地添加并提交了一个文件后，我们可以继续修改这个文件。文件被修改后，可以通过 git status命令查看结果。
+			git status
+	git status命令可以让我们时刻掌握仓库当前的状态，告诉我们，那些文件被修改过了，但还没有准备提交。
+
+	察看具体的文件更改内容: 可以使用 git diff fileName 来查看。
+		git diff readme.txt  //查看readme.txt文件的具体更改情况，具体的差异显示方式用的是标准的unix diff的形式。
+		git diff顾名思义就是查看difference，显示的格式正是Unix通用的diff格式。
+
+  如果没有问题就可以添加，提交了。
+  		git add readme.txt   //添加 readme.txt到库中。
+  		git status    //显示现在的状态，将要被提交的修改包括readme.txt。
+  		git commit -m "comments"  // 放心的进行提交。
+  		git status    //查看提交后的仓库状态，Git告诉当前没有需要提交的修改，工作目录是干净（working directory clean）的。
