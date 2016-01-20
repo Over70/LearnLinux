@@ -1,0 +1,4 @@
+This is a unicode-8 file.
+This file is without BOM.
+This is a test file for git.
+This version is one.
