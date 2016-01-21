@@ -140,11 +140,15 @@
     添加远程库
     	我们可以在GitHub上建立一个新的库，并且和本地的库关联起来，这样就可以让两个仓库远程同步了。
     	创建好远程库后，进入本地的库的目录。然后执行下面的指令
-    	1：git remote add origin git@github.com/GitHubUserName/RomoteRepositoryName.git  //将本地库和远程库关联起来。
+    	1：git remote add origin git@github.com:GitHubUserName/RomoteRepositoryName.git  //使用git协议将本地库和远程库关联起来。
+    		 git remote add origin https://github.com/GitHubUserName/RomoteRepositoryName.git  //使用https协议将本地库和远程库关联起来。
 	    	参数解释
 	    	  origin：远程库的名字就是origin，这是Git默认的叫法，也可以改成别的，但是origin这个名字一看就知道是远程库。
 	    	  GitHubUserName: 用户在GitHub网站的登陆用户名，注意大小写。
 	    	  RomoteRepositoryName: 所创建的库的名称。
+
+	    	Git支持多种协议，默认的git://使用ssh，但也可以使用https等其他协议。使用https除了速度慢以外，
+	    还有个最大的麻烦是每次推送都必须输入口令，但是在某些只开放http端口的公司内部就无法使用ssh协议而只能用https。
       2：git push -u origin master   //把本地库的内容推送到远程，用git push命令，实际上是把当前分支master推送到远程。
     	    由于远程库是空的，第一次推送master分支时，加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，
     	还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令。
@@ -155,5 +159,20 @@
          origin 为远程库的名字
          master  为推送到远程的maser分支。
 
-    克隆远程库
 
+
+    克隆远程库
+        如果先有了远程库，然后从远程库克隆本地库。
+        1：在GitHub上创建一个新的库。
+        2：使用git clone 克隆库到本地。
+           git clone git@github.com:GitHubUserName/RomoteRepositoryName.git //克隆远端的库到本地
+
+           GitHubUserName: 用户在GitHub网站的登陆用户名，注意大小写。
+	    	   RomoteRepositoryName: 所创建的库的名称。
+           使用的是git协议
+           完成后会在当前目录下新建一个与克隆的库名称一模一样的目录。
+      两个协议的url例子
+     			https://github.com/Over70/LearnLinux.git
+					git@github.com:Over70/LearnLinux.git
+
+分支管理
