@@ -85,3 +85,26 @@
 			3628164 HEAD@{1}: commit: append GPL
 			ea34578 HEAD@{2}: commit: add distributed
 			cb926e7 HEAD@{3}: commit (initial): wrote a readme file
+
+管理修改
+		需要清楚工作区和暂存区的概念和区别。
+		加入我们这样操作：
+			第一次修改 -> git add -> 第二次修改 -> git commit
+		Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交。
+		但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，
+		也就是第一次的修改被提交了，第二次的修改不会被提交。
+		此时可以通过 git status 来查看状态。
+		如何提交第二次修改呢？
+		可以继续git add再git commit，也可以别着急提交第一次修改，先git add第二次修改，再git commit，
+		就相当于把两次修改合并后一块提交了.
+    提交后，用git diff HEAD -- filename 命令可以查看工作区和版本库里面最新版本的区别：
+
+撤销修改
+	如果把文件更改错误了，我们需要怎么处理呢？ 可以撤销修改。
+
+	场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout -- file。
+	场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，
+		第一步用命令git reset HEAD file，就回到了场景1，
+		第二步按场景1操作。
+	场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退一节，不过前提是没有推送到远程库。
+		git checkout -- readme.txt     //把readme.txt文件在工作区的修改全部撤销
