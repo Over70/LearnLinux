@@ -262,3 +262,23 @@ Bug分支
   	git stash apply stash@{0}  // 根据选择来恢复stash内容。
 
   如果一个分支还没有被合并，删除时必须 git branch -D BranchName 这种格式才可以删除。
+
+多人协作
+		当从远程仓库克隆时，实际上Git自动把本地的master分支和远程的master分支对应起来了，并且，远程仓库的默认名称是origin。
+    要查看远程库的信息，用git remote。要查看更加详细的信息可以用 git remote -v
+
+   推送分支：就是把该分支上的所有本地提交推送到远程库。
+   		git push RemoteRepositoryName BranchName // RemoteRepositoryName为远程库的名称。 BranchName为需要推送到远程的分支名称.
+
+   抓取分支
+     git pull 把最新的提交从远程库的对应分支抓下来，然后，在本地合并，解决冲突，而后才可以再次的进行推送。
+     如果git pull失败时，可能是没有建立远端的分支到本地分支的关联，设置关联后再进行抓取。
+     git branch --set-upstream LocalBranch RemoteRepository/Branch   // --set-upstream  设置关联 LocalBranch到RemoteRepository/Branch的关联。
+
+   多人协作的通常模式
+    首先，可以试图用git push origin branch-name推送自己的修改；
+    如果推送失败，则因为远程分支比你的本地更新，需要先用git pull试图合并；
+    如果合并有冲突，则解决冲突，并在本地提交；
+    没有冲突或者解决掉冲突后，再用git push origin branch-name推送就能成功！
+		如果git pull提示“no tracking information”，则说明本地分支和远程分支的链接关系没有创建，
+		  用命令git branch --set-upstream branch-name origin/branch-name。
