@@ -223,3 +223,42 @@ http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b0
     4: 用带参数的git log也可以看到分支的合并情况
     		git log --graph --pretty=oneline --abbrev-commit // 查看分支合并的情况
 
+分支管理
+		通常，合并分支时，Git会用Fast forward模式，但这种模式下，删除分支后，会丢掉分支信息。
+		如果强制禁用Fast forward模式，Git就会在merge时生成一个新的commit，这样，从分支历史上就可以看出分支信息。
+		强制禁用Fast forward模式可以通过参数 --no-ff 来实现。
+		使用  --no-ff的例子
+		 	git merge --no-ff -m "merge with no-ff" dev  //使用--no-ff 合并dev到当前branch. -m为合并时的注释信息。
+
+	 分支管理策略
+		在实际开发中，我们应该按照几个基本原则进行分支管理：
+			首先，master分支应该是非常稳定的，也就是仅用来发布新版本，平时不能在上面干活.
+			那在哪干活呢？干活都在dev分支上，也就是说，dev分支是不稳定的，到某个时候，比如1.0版本发布时，
+	 再把dev分支合并到master上，在master分支发布1.0版本；
+			各个开发成员都在dev分支上干活，每个人都有自己的分支，时不时地往dev分支上合并就可以了。
+    	主分支 master:   代码库应该有一个、且仅有一个主分支。
+    	开发分支 develop: 开发分支
+   		功能分支 feature: 为了开发某种特定功能，从Develop分支上面分出来的。开发完成后，要再并入Develop。
+    	预发布分支  release：指发布正式版本之前(即合并到Master分支之前)，需要有一个预发布的版本进行测试。
+    	                     预发布分支是从Develop分支上面分出来的，预发布结束以后，必须合并进Develop和Master分支。
+    	                     命名，可以采用release-*的形式。
+    	bug 分支 fixbug：软件正式发布以后，难免会出现bug。这时就需要创建一个分支，进行bug修补。
+    									 修补bug分支是从Master分支上面分出来的。修补结束以后，再合并进Master和Develop分支。
+    									 它的命名，可以采用fixbug-*的形式。
+    	其它分支 other
+Bug分支
+   在Git中，由于分支是如此的强大，所以，每个bug都可以通过一个新的临时分支来修复，修复后，合并分支，然后将临时分支删除。
+   但当我们需要修复bug的时候，原来的工作区还有没有完成的内容，此时直接切换工作区的话，这些还不能进行提交的文件如何处理。
+   Git还提供了一个stash功能，可以把当前工作现场“储藏”起来，等以后恢复现场后继续工作.
+   		git stash
+  把当前工作去储存起来，然后切换到你需要开始修复bug的分支。然后就可以开始修复分支了。
+
+  有关 stash的几个命令。
+  	git stash list  //查看当前所有储存起来的工作区状态。
+  	git stash       //储存当前工作区
+  	git stash apply //恢复当前储存的工作去。但是恢复后，stash内容并不删除，你需要用git stash drop来删除.
+  	git stash pop   //恢复工作区，恢复同时把stash内容也删了。
+  	git stash drop  //删除当前的stash的内容。
+  	git stash apply stash@{0}  // 根据选择来恢复stash内容。
+
+  如果一个分支还没有被合并，删除时必须 git branch -D BranchName 这种格式才可以删除。
