@@ -282,3 +282,41 @@ Bug分支
     没有冲突或者解决掉冲突后，再用git push origin branch-name推送就能成功！
 		如果git pull提示“no tracking information”，则说明本地分支和远程分支的链接关系没有创建，
 		  用命令git branch --set-upstream branch-name origin/branch-name。
+
+标签管理
+		发布一个版本时，通常先在版本库中打一个标签，这样，就唯一确定了打标签时刻的版本。将来无论什么时候，取某个标签的版本，
+	就是把那个打标签的时刻的历史版本取出来。所以，标签也是版本库的一个快照。
+
+		Git的标签虽然是版本库的快照，但其实它就是指向某个commit的指针（跟分支很像对不对？但是分支可以移动，标签不能移动），
+	所以，创建和删除标签都是瞬间完成的。
+
+	创建标签
+		Git中打标签非常简单，首先，切换到需要打标签的分支上，然后执行 git tag <tagname> 就可以创建一个标签了。例如下：
+			$ git branch   //查看当前的分支状况
+				* dev
+				  master
+			$ git checkout master    //切换到master 分支
+				Switched to branch 'master'
+ 			$ git tag v1.0    //在master分支上建立一个v1.0的标签
+
+ 		   默认标签是打在最新提交的commit上的。有时候，如果忘了打标签，比如，现在已经是周五了，但应该在周一打的标签没有打，怎么办？
+	  方法是找到历史提交的commit id，然后打上就可以了
+	     git log --pretty=oneline --abbrev-commit   // 查找具体的commit  id
+	     gt tag v0.9 commit_id    //在具体的commit 上创建标签，commit_id为在前一条命令中找到的ID.
+
+	 创建带有说明的标签
+	 		 git tag -a <tagname> -m "<comment>" <commit_id>  //tagname为指定的标签名, comment为具体的版本信息，commit_id为具体的commit id。
+
+	 查看标签
+	 		git tag： 查看标签
+	 		git show <tagname>  查看具体的标签信息，看到说明文字.
+
+
+    小结
+    命令git tag <name>用于新建一个标签，默认为HEAD，也可以指定一个commit id；
+
+    git tag -a <tagname> -m "blablabla..."可以指定标签信息；
+
+    git tag -s <tagname> -m "blablabla..."可以用PGP签名标签；
+
+    命令git tag可以查看所有标签。
