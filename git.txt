@@ -320,3 +320,142 @@ Bug分支
     git tag -s <tagname> -m "blablabla..."可以用PGP签名标签；
 
     命令git tag可以查看所有标签。
+
+   操作标签
+   		删除标签： git tag -d <tagname>
+   				因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。
+   	  推送标签:  git push origin <tagname>   //origin 远程数据库的名称， tagname为准备推送的标签。
+   	  推送所有标签:  git push origin --tags  // --tags参数表明所有标签
+   	  删除远程标签:
+   	  		标签已经推送到远程，要删除远程标签就麻烦一点.
+   	  		1: 首先删除本地标签。  git tag -d <tabname>
+   	  		2: 推送已经删除的标签到远端。 git push origin :refs/tags/<tagname>
+
+				实际上Git 的推送和删除远程标签命令是相同的，删除操作实际上就是推送空的源标签refs：
+					git push origin tagname
+					相当于
+					git push origin refs/tags/tagname :refs/tags/tagname
+		小结
+
+		    命令git push origin <tagname>可以推送一个本地标签；
+
+		    命令git push origin --tags可以推送全部未推送过的本地标签；
+
+		    命令git tag -d <tagname>可以删除一个本地标签；
+
+		    命令git push origin :refs/tags/<tagname>可以删除一个远程标签。
+
+使用github
+		   GitHub作为免费的远程仓库，如果是个人的开源项目，放到GitHub上是完全没有问题的。其实GitHub还是一个开源协作社区，
+		通过GitHub，既可以让别人参与你的开源项目，也可以参与别人的开源项目。
+
+			 如何参与一个开源项目呢？比如人气极高的bootstrap项目，这是一个非常强大的CSS框架，你可以
+	  访问它的项目主页https://github.com/twbs/bootstrap，点“Fork”就在自己的账号下克隆了一个bootstrap仓库，
+	  然后，从自己的账号下clone。
+	     然后进行修改，提交推送。但是推送只是推送到自己的克隆出来的库。
+	     如果你希望bootstrap的官方库能接受你的修改，你就可以在GitHub上发起一个pull request。
+	   当然，对方是否接受你的pull request就不一定了
+
+	   小结
+
+		    在GitHub上，可以任意Fork开源仓库；
+
+		    自己拥有Fork后的仓库的读写权限；
+
+		    可以推送pull request给官方仓库来贡献代码。
+
+自定义GIT
+		彩色显示git命令的内容。
+				git config --global color.ui true: 让Git显示颜色，会让命令输出看起来更醒目。
+
+		忽略特殊文件
+			  有些不需要由git管理的文件类型，总是出现在untracked files中。可以通过以下办法简单的过滤.
+			  1: 在Git工作区的根目录下创建一个特殊的.gitignore文件，然后把要忽略的文件名填进去.
+			  2：提交 .gitignore 文件到库中，使git可以管理 .gitignore 文件。
+			  3：Git就会自动忽略这些文件。
+
+			  不需要从头写.gitignore文件，GitHub已经为我们准备了各种配置文件，只需要组合一下就可以使用了。
+			所有配置文件可以直接在线浏览：https://github.com/github/gitignore
+
+	配置别名
+		给一些长的命令起一个别名，然后执行这个别名就相当于执行了该长命令。 就像linux 下的 ll 就执行 ls -l的指令一样。
+		设置别名
+			git config --global alias.AliasName command  // alias表明创建的是别名。 AliasName 是具体的别名，
+																									 //command 为 原本需要执行的命令.
+																									 //--global 表示本台机器上的所有仓库下该别名都有效。
+			git config --global alias.st status   // 设置git statue 的别名为 git st.
+
+			一个超常的log命令,别名为 git lg
+			git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+
+	配置文件
+			配置Git的时候，加上--global是针对当前用户起作用的，如果不加，那只针对当前的仓库起作用。
+			配置文件放哪了？每个仓库的Git配置文件都放在.git/config文件中：
+			而当前用户的Git配置文件放在用户主目录下的一个隐藏文件.gitconfig中：
+			可以在配置文件中设置alias,或者删除。
+			一个config文件的内容
+			$ cat .git/config
+			[core]
+			    repositoryformatversion = 0
+			    filemode = true
+			    bare = false
+			    logallrefupdates = true
+			    ignorecase = true
+			    precomposeunicode = true
+			[remote "origin"]
+			    url = git@github.com:michaelliao/learngit.git
+			    fetch = +refs/heads/*:refs/remotes/origin/*
+			[branch "master"]
+			    remote = origin
+			    merge = refs/heads/master
+			[alias]
+			    last = log -1
+
+搭建git服务器
+		github是一个免费的git服务器。但总有这样或者那样的问题，不是很适合自己。自己搭建一个服务器来解决这个问题。
+
+		搭建Git服务器需要准备一台运行Linux的机器，强烈推荐用Ubuntu或Debian，这样，通过几条简单的apt命令就可以完成安装。
+
+		注意搭建前注意用户需要有 sudo 的权限。
+			第一步，安装git
+				$ sudo apt-get install git
+
+			第二步，创建一个git用户，用来运行git服务：
+				$ sudo adduser git
+
+			第三步，创建证书登录：
+				收集所有需要登录的用户的公钥，就是他们自己的id_rsa.pub文件，把所有公钥导入到/home/git/.ssh/authorized_keys文件里，一行一个。
+
+		  第四步，初始化Git仓库：
+		  	先选定一个目录作为Git仓库，(例如 /srv/sample.git），在/srv目录下输入命令：
+		  	$ sudo git init --bare sample.git  //sample.git文件名可以根据需要自己设定，但必须是以.git结尾。
+		  	 创建一个裸库。裸仓库没有工作区，因为服务器上的Git仓库纯粹是为了共享，所以不让用户直接登录到服务器上去改工作区，
+		  并且服务器上的Git仓库通常都以.git结尾。
+		  	$ sudo chown -R git:git sample.git //更改sample.git文件的owner.
+
+		  第五步，禁用shell登录。
+		  	出于安全考虑，第二步创建的git用户不允许登录shell，这可以通过编辑/etc/passwd文件完成。
+		  	由 git:x:1001:1001:,,,:/home/git:/bin/bash
+		  	改为
+ 					 git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell
+
+			这样git用户可以正常通过ssh使用git，但无法登录shell，因为我们为git用户指定的git-shell每次一登录就自动退出。
+
+			第六步，克隆远程仓库
+					$ git clone git@server:/srv/sample.git
+					可以通过git clone命令克隆远程仓库了，在各自的电脑上运行：
+
+		管理公钥
+
+			如果团队很小，把每个人的公钥收集起来放到服务器的/home/git/.ssh/authorized_keys文件里就是可行的。
+			如果团队有几百号人，就没法这么玩了，这时，可以用Gitosis来管理公钥。
+
+
+		管理权限
+
+			有很多不但视源代码如生命，而且视员工为窃贼的公司，会在版本控制系统里设置一套完善的权限控制，
+		每个人是否有读写权限会精确到每个分支甚至每个目录下。因为Git是为Linux源代码托管而开发的，所以
+		Git也继承了开源社区的精神，不支持权限控制。不过，因为Git支持钩子（hook），所以，可以在服务器端
+		编写一系列脚本来控制提交等操作，达到权限控制的目的。Gitolite就是这个工具。
+
+这里我们也不介绍Gitolite了，不要把有限的生命浪费到权限斗争中。
